@@ -6,7 +6,7 @@ b = gets.chomp.to_i
 puts 'Задайте число c'
 c = gets.chomp.to_i
 
-puts "Ваше уравнение #{a}*x**2 + #{b}*x + #{c} = 0"
+puts "Ваше уравнение #{a} * x**2 + #{b} * x + #{c} = 0"
 
 d = (b**2 - 4 * a * c)
 
