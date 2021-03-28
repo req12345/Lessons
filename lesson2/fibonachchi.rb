@@ -8,11 +8,11 @@ loop do
   else
     i = fibo[-1] + fibo[-2]
     if i <= 100
-      fibo << i
+    fibo << i
   else
     break
   end
-end
+  end
 end
 
 puts fibo.to_s
