@@ -20,8 +20,8 @@ if month == 1
   d = day
   puts "Порядковый номер даты #{d}"
 else
-    days[0..(month - 2)].each do |n|
+  days[0..(month - 2)].each do |n|
   d += n
-  end
+end
   puts "Порядковый номер даты #{(d + day)}"
 end
