@@ -3,6 +3,6 @@ num_pitch_5 = []
 (10..100).each do |i|
   if i % 5 == 0
   num_pitch_5.push(i)
-end
+  end
 end
 puts num_pitch_5.to_s
