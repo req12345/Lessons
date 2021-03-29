@@ -7,10 +7,10 @@ loop do
   title = gets.chomp.to_s
   break if title == 'стоп'
   puts 'Введите цену за единицу'
-  price_inpt = gets.chomp.to_f
+  price_input = gets.chomp.to_f
   puts 'Введите количество единиц товара'
-  amount_inpt = gets.chomp.to_f
-  basket[title] = {'price' => price_inpt, 'amount' => amount_inpt}
+  amount_input = gets.chomp.to_f
+  basket[title] = {'price' => price_input, 'amount' => amount_input}
   puts 'Если хватит введите \'стоп\''
 end
 
