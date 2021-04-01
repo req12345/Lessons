@@ -152,16 +152,16 @@ class Train #Класс Train (Поезд)
 end
 
 
-station1 = Station.new('Sevastopol')
-station2 = Station.new('Simferopol')
-station3 = Station.new('Kerch')
-
-route1 = Route.new(station1, station3)
-route1.add_station(station2)
-
-train1 = Train.new('123', 'cargo', 5)
-train1.route_take(route1)
-
+# station1 = Station.new('Sevastopol')
+# station2 = Station.new('Simferopol')
+# station3 = Station.new('Kerch')
+#
+# route1 = Route.new(station1, station3)
+# route1.add_station(station2)
+# #
+# train1 = Train.new('123', 'cargo', 5)
+# train1.route_take(route1)
+# train1.move('forward')
 # train2 = Train.new('333', 'passanger', 10)
 # train3 = Train.new('54746', 'passanger', 10)
 # station1.get_train(train2)
