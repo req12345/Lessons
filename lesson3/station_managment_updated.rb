@@ -110,10 +110,12 @@ class Train #Класс Train (Поезд)
     if direction == 'forward'
 
       current_station_index = route.stations.index(station)
-      next_station_index = route.stations.index(current_station_index + 1).name
+      next_station_index = route.stations.index(current_station_index + 1)
       puts 'This is last station' if current_station_index == "#{route.stations.index(station) == -1}"
       next_station = route.stations[next_station_index]
-      @station = station.get_train(self)
+      @station = next_station
+      @station = next_station.get_train(self)
+
 
     end
 
@@ -122,8 +124,9 @@ class Train #Класс Train (Поезд)
       previous_station_index = route.stations.index(current_station_index - 1)
       puts 'This is first station' if current_index == "#{route.stations.index(station) == 0}"
       previous_station = route.stations[previous_station_index]
-      @station = previous_station.get_train(self)
       @station = previous_station
+      @station = previous_station.get_train(self)
+
     end
   end
 
