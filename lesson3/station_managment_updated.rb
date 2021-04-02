@@ -1,3 +1,4 @@
+
 class Station  #Класс Station (Станция)
   #Может возвращать список всех поездов на станции, находящиеся в текущий момент
   attr_reader :trains, :name
@@ -14,8 +15,8 @@ class Station  #Класс Station (Станция)
   end
 
   #Может отправлять поезда (по одному за раз, при этом, поезд удаляется из списка поездов, находящихся на станции).
-  def send_train(name)
-    @trains.delete(name)
+  def send_train(train)
+    @trains.delete(train)
   end
 
   # Может возвращать список поездов на станции по типу (см. ниже): кол-во грузовых, пассажирских
@@ -53,14 +54,9 @@ class Route #Класс Route (Маршрут)
     @intermediate_sation.delete(name)
   end
 
-  def stations
-    @intermediate_station.unshift(@initial)
-    @intermediate_station.push(@final)
-  end
-
   #Может выводить список всех станций по-порядку от начальной до конечной
-  def stations_list
-    puts "Station list: #{@initial.name}, #{@intermediate_station.map(&:name).join(', ')}, #{@final.name}"
+  def stations
+    stations = [@initial, *@intermediate_station, @final]
   end
 end
 
@@ -90,44 +86,45 @@ class Train #Класс Train (Поезд)
   #Может прицеплять/отцеплять вагоны (по одному вагону за операцию,
   #метод просто увеличивает или уменьшает количество вагонов)
   #Прицепка/отцепка вагонов может осуществляться только если поезд не движется.
-  def hook(operation)
+  def hook_in
     return if speed != 0
-
-    if operation == 'hook_in'
-      @wagons += 1
-    end
-    if operation == 'hook_out'
-      return unless @wagons > 1
-      @wagons -= 1
-    end
+    @wagons += 1
   end
+
+  def hook_out
+    return unless @wagons > 1
+    @wagons -= 1
+  end
+
 
   # Может перемещаться между станциями, указанными в маршруте.
   # Перемещение возможно вперед и назад, но только на 1 станцию за раз.
   # Определить индекс текущей станции в маршруте
   # Проверка на последнюю станцию
-    def move(direction)
-    if direction == 'forward'
-
-      current_station_index = route.stations.index(station)
-      next_station_index = route.stations.index(current_station_index + 1)
-      puts 'This is last station' if current_station_index == "#{route.stations.index(station) == -1}"
-      next_station = route.stations[next_station_index]
-      @station = next_station
-      @station = next_station.get_train(self)
-
-
+  def move_next
+    current_station_index = route.stations.index(station)
+    next_station_index = (current_station_index + 1)
+    if next_station_index > (route.stations.length - 1)
+      puts 'Нельзя!'
+      return
     end
+    @station.send_train(self)
+    next_station = route.stations[next_station_index]
+    @station = next_station
+    @station.get_train(self)
+  end
 
-    if direction == 'back'
-      current_station_index = route.stations.index(station)
-      previous_station_index = route.stations.index(current_station_index - 1)
-      puts 'This is first station' if current_index == "#{route.stations.index(station) == 0}"
-      previous_station = route.stations[previous_station_index]
-      @station = previous_station
-      @station = previous_station.get_train(self)
-
+  def move_back
+    current_station_index = route.stations.index(station)
+    previous_station_index = (current_station_index - 1)
+    if previous_station_index == 0
+      puts 'Нельзя!'
+      return
     end
+    @station.send_train(self)
+    previous_station = route.stations[previous_station_index]
+    @station = previous_station
+    @station.get_train(self)
   end
 
   #может возвращать предыдущую станцию, текущую, следующую, на основе маршрута
@@ -136,9 +133,9 @@ class Train #Класс Train (Поезд)
     previous_index = current_index - 1
     next_index = current_index + 1
 
-    puts "previous station is #{route.stations[previous_index].name}"
-    puts "current station is #{route.stations[current_index].name}"
-    puts "next station is #{route.stations[next_index].name}"
+    puts "previous station is #{route.stations[previous_index]}"
+    puts "current station is #{route.stations[current_index]}"
+    puts "next station is #{route.stations[next_index]}"
   end
 
   #Может принимать маршрут следования (объект класса Route).
@@ -153,21 +150,3 @@ class Train #Класс Train (Поезд)
     @station = station
   end
 end
-
-
-# station1 = Station.new('Sevastopol')
-# station2 = Station.new('Simferopol')
-# station3 = Station.new('Kerch')
-#
-# route1 = Route.new(station1, station3)
-# route1.add_station(station2)
-# #
-# train1 = Train.new('123', 'cargo', 5)
-# train1.route_take(route1)
-# train1.move('forward')
-# train2 = Train.new('333', 'passanger', 10)
-# train3 = Train.new('54746', 'passanger', 10)
-# station1.get_train(train2)
-# station1.get_train(train3)
-#
-# station1.trains_by_type
