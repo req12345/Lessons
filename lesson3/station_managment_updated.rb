@@ -101,43 +101,45 @@ class Train #Класс Train (Поезд)
   # Перемещение возможно вперед и назад, но только на 1 станцию за раз.
   # Определить индекс текущей станции в маршруте
   # Проверка на последнюю станцию
-  def move_next
+  def next_station
     current_station_index = route.stations.index(station)
-    next_station_index = (current_station_index + 1)
-    if next_station_index > (route.stations.length - 1)
-      puts 'Нельзя!'
+    if current_station_index == (route.stations.length - 1)
+      puts 'Вы на конечной станции'
       return
     end
-    @station.send_train(self)
+    next_station_index = (current_station_index + 1)
     next_station = route.stations[next_station_index]
+  end
+
+  def previous_station
+    current_station_index = route.stations.index(station)
+    if current_station_index == 0
+      puts 'Вы на начальной станции'
+      return
+    end
+    previous_station_index = (current_station_index - 1)
+    previous_station = route.stations[previous_station_index]
+  end
+
+  def current_station
+    current_station = station
+  end
+
+  def move_next_station
+    return unless next_station
+    @station.send_train(self)
     @station = next_station
     @station.get_train(self)
   end
 
-  def move_back
-    current_station_index = route.stations.index(station)
-    previous_station_index = (current_station_index - 1)
-    if previous_station_index == 0
-      puts 'Нельзя!'
-      return
-    end
+  def move_previous_station
+    return unless previous_station
     @station.send_train(self)
-    previous_station = route.stations[previous_station_index]
     @station = previous_station
     @station.get_train(self)
   end
 
   #может возвращать предыдущую станцию, текущую, следующую, на основе маршрута
-  def near_stations
-    current_index = route.stations.index(station)
-    previous_index = current_index - 1
-    next_index = current_index + 1
-
-    puts "previous station is #{route.stations[previous_index]}"
-    puts "current station is #{route.stations[current_index]}"
-    puts "next station is #{route.stations[next_index]}"
-  end
-
   #Может принимать маршрут следования (объект класса Route).
   #При назначении маршрута поезду, поезд автоматически помещается на первую
   #станцию в маршруте.
