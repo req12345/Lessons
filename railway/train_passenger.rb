@@ -1,4 +1,7 @@
 class TrainPassanger < TrainPassenger
-  @wagons_passenger = []
 
+  def initialize
+  @wagons_passenger = []
+  end
+  
 end
