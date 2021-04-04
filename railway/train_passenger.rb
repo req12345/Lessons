@@ -1,4 +1,4 @@
-class TrainPassanger < Train
-  wagons_passenger = []
-  
+class TrainPassanger < TrainPassenger
+  @wagons_passenger = []
+
 end
