@@ -1,5 +1,5 @@
-class WagonCargo < Wagon
-  
+class WagonCargo < TrainCargo
+
   # def hook_in
   #   return if speed != 0
   #   @wagons += 1
