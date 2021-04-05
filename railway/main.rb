@@ -66,6 +66,7 @@ loop do
       puts 'Введите конечную станцию'
       final = gets.chomp
       route = Route.new(initial, final)
+      routes << route
     end
 
     if choice == 2
