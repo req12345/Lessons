@@ -1,9 +1,7 @@
-class TrainPassanger < TrainPassenger
+class TrainPassanger < Train
 
-  def initialize(number,type)
-  @number = number
-  @type = 'passenger'
-  @wagons_passenger = []
+  def initialize(number, *wagons)
+    @type = 'passanger'
+    super
   end
-
 end
