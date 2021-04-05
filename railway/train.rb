@@ -1,12 +1,9 @@
 class Train
-
   attr_accessor :speed, :number
-
   attr_reader :wagons, :route, :station, :type
 
-  def initialize(number, type, wagons)
+  def initialize(number, *wagons)
     @number = number
-    @type = type
     @wagons = wagons
     @speed = 0
     @route = nil
@@ -17,44 +14,29 @@ class Train
     @speed = 0
   end
 
-  def hook_in
-    return if speed != 0
-    @wagons += 1
+  def attach_wagon(wagon)
+    return if speed != 0 && wagon.type != type
+    @wagons << wagon
   end
 
-  def hook_out
+  def detach_wagon(wagon)
     return unless @wagons > 1
     @wagons -= 1
   end
 
-  def next_station
-    current_station_index = route.stations.index(station)
-    if current_station_index == (route.stations.length - 1)
-      puts 'Вы на конечной станции'
-      return
-    end
-    next_station_index = (current_station_index + 1)
-    next_station = route.stations[next_station_index]
-  end
-
-  def previous_station
-    current_station_index = route.stations.index(station)
-    if current_station_index == 0
-      puts 'Вы на начальной станции'
-      return
-    end
-    previous_station_index = (current_station_index - 1)
-    previous_station = route.stations[previous_station_index]
-  end
-
-  def current_station
-    current_station = station
-  end
-
   def move_previous_station
     return unless previous_station
+
     @station.send_train(self)
     @station = previous_station
+    @station.get_train(self)
+  end
+
+  def move_next_station
+    return unless next_station
+    
+    @station.send_train(self)
+    @station = next_station
     @station.get_train(self)
   end
 
@@ -63,5 +45,28 @@ class Train
     station = route.initial
     station.get_train(self)
     @station = station
+  end
+
+  private
+
+  def next_station
+    current_station_index = route.stations.index(station)
+    if current_station_index == (route.stations.length - 1)
+      return
+    end
+    next_station_index = (current_station_index + 1)
+    route.stations[next_station_index]
+  end
+
+  def previous_station
+    current_station_index = route.stations.index(station)
+    return if current_station_index == 0
+
+    previous_station_index = (current_station_index - 1)
+    route.stations[previous_station_index]
+  end
+
+  def current_station
+    station
   end
 end
