@@ -34,7 +34,7 @@ class Train
 
   def move_next_station
     return unless next_station
-    
+
     @station.send_train(self)
     @station = next_station
     @station.get_train(self)
@@ -48,7 +48,8 @@ class Train
   end
 
   private
-
+#Данные методы помещены в privat т.к. они созданы для удобства и простоты выполнения
+#move_next_station и move_previous_station. Используются только внутри класса Train
   def next_station
     current_station_index = route.stations.index(station)
     if current_station_index == (route.stations.length - 1)
