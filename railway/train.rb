@@ -1,6 +1,7 @@
+
 class Train
   attr_accessor :speed, :number
-  attr_reader :wagons, :route, :station, :type
+  attr_reader :wagons, :route, :station, :type, :wagon
 
   def initialize(number, *wagons)
     @number = number
@@ -20,9 +21,11 @@ class Train
   end
 
   def detach_wagon(wagon)
-    return unless @wagons > 1
-    @wagons -= 1
+    if @wagons.size != 0
+      @wagons.delete(wagon)
+    end
   end
+
 
   def move_previous_station
     return unless previous_station
@@ -48,7 +51,7 @@ class Train
   end
 
   private
-#Данные методы помещены в privat т.к. они созданы для удобства и простоты выполнения
+#Данные методы помещены в private т.к. они созданы для удобства и простоты выполнения
 #move_next_station и move_previous_station. Используются только внутри класса Train
   def next_station
     current_station_index = route.stations.index(station)
