@@ -13,7 +13,7 @@ class Route
   end
 
   def delete_station(name)
-    @intermediate_sation.delete(name)
+    @intermediate_station.delete(name)
   end
 
   def stations
