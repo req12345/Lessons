@@ -7,12 +7,6 @@ require_relative 'wagon.rb'
 require_relative 'wagon_cargo.rb'
 require_relative 'wagon_passenger.rb'
 
-#
-# puts 'Введите 5, чтобы добавить вагоны к поезду'
-# puts 'Введите 6, чтобы отцепить вагон от поезда'
-# puts 'Введите 7, чтобы переместить поезд вперед или назад'
-# puts 'Введите 8, чтобы просмотреть список станций и список поездов на станциях'
-
 class Main
   def initialize
     @stations = []
@@ -33,6 +27,11 @@ class Main
       when 4 then create_new_route
       when 5 then edit_route
       when 6 then train_route_take
+      when 7 then attach_wagons_to_train
+      when 8 then detach_wagons_to_train
+      when 9 then move_train_next_station
+      when 10 then move_train_previous_station
+      when 11 then trains_list
       when 0 then break
       end
     end
@@ -40,6 +39,8 @@ class Main
 
   private
 
+# Все нижеперечисленные методы помещены в приватную секцию, так как используются только внутри класса
+# Пользователю программы доступ к этим методам не нужен, они вызываются только из Меню
   def print_menu
     puts '1. Новая станция'
     puts '2. Список станций'
@@ -47,6 +48,11 @@ class Main
     puts '4. Новый маршрут'
     puts '5. Редактирование маршрутов'
     puts '6. Назначение маршрута поезду'
+    puts '7. Добавить вагоны к поезду'
+    puts '8. Отцепить вагоны от поезда'
+    puts '9. Переместить поезд на следующую станцию'
+    puts '10. Переместить поезд на следующую станцию'
+    puts '11. Список поездов'
     puts '0. Завершить программу'
   end
 
@@ -61,6 +67,12 @@ class Main
   def stations_list(stations)
     @stations.each_with_index do |station, i|
       puts "#{i}. #{station.name}"
+    end
+  end
+
+  def trains_list
+    @trains.each_with_index do |train, i|
+      puts "#{i}. #{train.number}"
     end
   end
 
@@ -113,7 +125,7 @@ class Main
 
   def edit_route
     puts 'Выберите маршрут из списка:'
-    @routes.each_with_index {|route, i| puts "#{i}. #{route.initial.name} — "}
+    @routes.each_with_index {|route, i| puts "#{i}. #{route.initial.name} — #{route.final.name}"}
     index_route = gets.chomp.to_i
     route_selected = @routes[index_route]
 
@@ -128,57 +140,99 @@ class Main
     end
   end
 
-  def select_station
-
-  def add_station_to_route(route_selected)
+    def add_station_to_route(route_selected)
     puts 'Выберите добавляемую станцию'
-    stations_list(@stations)
-    i = gets.chomp.to_i
-    station_selected = @stations[i]
-    route.add_station(station_selected)
-    puts "Станция добавлена, новый маршрут:"
-    stations_list(route.stations)
-  end
     # Вывести список станций из памяти программы (@stations - route.stations)
     # доступные_станции = @stations - route.stations
     # вывести доступные станции
-
-
-
+    stations_list(@stations)
+    i = gets.chomp.to_i
+    station_selected = @stations[i]
+    route_selected.add_station(station_selected)
+    puts "Станция добавлена, новый маршрут:"
+    stations_list(route_selected.stations)
+  end
 
   def delete_station_from_route(route)
-    if route.stations.count < 2
+    if route_selected.stations.count < 2
       puts 'Вы не можете удалить начальную и конечную станции'
       return
     else
 
     puts 'Какую станцию вы хотите удалить?'
-    stations_list(route.stations)
+    stations_list(route_selected.stations)
 
     i = gets.chomp.to_i
-    route.stations.delete_at(i)
-
+    route_selected.stations.delete_at(i)
     puts 'Станция удалена, новый список:'
-    stations_list(route.stations)
+    stations_list(route_selected.stations)
     end
   end
 
   def train_route_take
+    if @trains.empty?
+      puts 'Сначала создайте поезд'
+      return
+    else
     puts 'Выберите маршрут из списка:'
-    @routes.each_with_index {|route, i| puts "#{i}. #{route.initial.name} — "}
+    @routes.each_with_index {|route, i| puts "#{i}. #{route.initial.name} — #{route.final.name}"}
     index_route = gets.chomp.to_i
     route_selected = @routes[index_route]
 
     puts 'Выберите поезд из списка'
-    @train.each_with_index {|train, i| puts "#{i}. #{train.number} — "}
+    @trains.each_with_index {|train, i| puts "#{i}. #{train.number}"}
     i = gets.chomp.to_i
     train_selected = @trains[i]
 
     train_selected.route_take(route_selected)
-    @trains
+    puts "Поезд #{train_selected.number} назначен на маршрут #{route_selected.initial.name} — #{route_selected.final.name} "
+    puts "#{@trains}"
+    end
   end
 
-end
+    def attach_wagons_to_train
+      puts 'Выберите поезд из списка'
+      @trains.each_with_index {|train, i| puts "#{i}. #{train.number}"}
+      i = gets.chomp.to_i
+      train_selected = @trains[i]
+
+      puts 'Введите название прицепляемого вагона'
+      wagon = gets.chomp
+      train_selected.attach_wagon(wagon)
+      puts "Вагон #{wagon} прицеплен"
+      puts "#{train_selected.wagons}"
+    end
+
+    def detach_wagons_to_train
+    puts 'Выберите поезд из списка'
+    @trains.each_with_index {|train, i| puts "#{i}. #{train.number}"}
+    i = gets.chomp.to_i
+    train_selected = @trains[i]
+
+    puts 'Введите название отцепляемого вагона'
+    puts "#{train_selected.wagons}"
+    wagon = gets.chomp
+    train_selected.detach_wagon(wagon)
+    puts "Вагон #{wagon} отцеплен"
+    puts "#{train_selected.wagons}"
+    end
+
+    def move_train_next_station
+      @trains.each_with_index {|train, i| puts "#{i}. #{train.number}"}
+      i = gets.chomp.to_i
+      train_selected = @trains[i]
+      train_selected.move_next_station
+      puts "#{train_selected.station}"
+    end
+
+    def move_train_previous_station
+      puts 'Выберите поезд из списка'
+      @trains.each_with_index {|train, i| puts "#{i}. #{train.number}"}
+      i = gets.chomp.to_i
+      train_selected = @trains[i]
+      train_selected.move_previous_station
+      puts "#{train_selected.station}"
+    end
 end
 
 Main.new().call
