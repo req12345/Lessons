@@ -65,12 +65,12 @@ class Main
   end
 
   def stations_list(stations)
-    @stations.each_with_index do |station, i|
+    stations.each_with_index do |station, i|
       puts "#{i}. #{station.name}"
     end
   end
 
-  def trains_list
+  def trains_list(stations)
     @trains.each_with_index do |train, i|
       puts "#{i}. #{train.number}"
     end
@@ -150,32 +150,30 @@ class Main
     end
   end
 
-    def add_station_to_route(route_selected)
+    def add_station_to_route(route)
     puts 'Выберите добавляемую станцию'
-    # Вывести список станций из памяти программы (@stations - route.stations)
-    # доступные_станции = @stations - route.stations
-    # вывести доступные станции
     stations_list(@stations)
     i = gets.chomp.to_i
     station_selected = @stations[i]
-    route_selected.add_station(station_selected)
+
+    route.add_station(station_selected)
     puts "Станция добавлена, новый маршрут:"
-    stations_list(route_selected.stations)
+    stations_list(route.stations)
   end
 
   def delete_station_from_route(route)
-    if route_selected.stations.count < 2
+    if route.stations.count < 2
       puts 'Вы не можете удалить начальную и конечную станции'
       return
     else
 
     puts 'Какую станцию вы хотите удалить?'
-    stations_list(route_selected.stations)
+    stations_list(route.stations)
 
     i = gets.chomp.to_i
-    route_selected.stations.delete_at(i)
+    route.stations.delete_at(i)
     puts 'Станция удалена, новый список:'
-    stations_list(route_selected.stations)
+    stations_list(route.stations)
     end
   end
 
