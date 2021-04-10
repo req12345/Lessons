@@ -165,13 +165,14 @@ class Main
     if route.stations.count < 2
       puts 'Вы не можете удалить начальную и конечную станции'
       return
-    else
 
+    else
     puts 'Какую станцию вы хотите удалить?'
     stations_list(route.stations)
-
     i = gets.chomp.to_i
-    route.stations.delete_at(i)
+    station_selected = route.stations[i]
+
+    route.delete_station(station_selected)
     puts 'Станция удалена, новый список:'
     stations_list(route.stations)
     end
@@ -181,6 +182,7 @@ class Main
     if @trains.empty?
       puts 'Сначала создайте поезд'
       return
+
     else
       route = route_selection
       train = train_selection
@@ -189,15 +191,15 @@ class Main
     end
   end
 
-    def attach_wagons_to_train
-      train = train_selection
-      puts 'Введите название прицепляемого вагона'
-      wagon = gets.chomp
-      train.attach_wagon(wagon)
-      puts "Вагон #{wagon} прицеплен"
-    end
+  def attach_wagons_to_train
+    train = train_selection
+    puts 'Введите название прицепляемого вагона'
+    wagon = gets.chomp
+    train.attach_wagon(wagon)
+    puts "Вагон #{wagon} прицеплен"
+  end
 
-    def detach_wagons_to_train
+  def detach_wagons_to_train
     train = train_selection
 
     puts 'Введите название отцепляемого вагона'
@@ -205,17 +207,17 @@ class Main
     wagon = gets.chomp
     train.detach_wagon(wagon)
     puts "Вагон #{wagon} отцеплен"
-    end
+  end
 
-    def move_train_next_station
-      train = train_selection
-      train.move_next_station
-    end
+  def move_train_next_station
+    train = train_selection
+    train.move_next_station
+  end
 
-    def move_train_previous_station
-      train = train_selection
-      train.move_previous_station
-    end
+  def move_train_previous_station
+    train = train_selection
+    train.move_previous_station
+  end
 end
 
 Main.new().call
