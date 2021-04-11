@@ -46,7 +46,7 @@ class Main
     puts '5. Редактирование маршрутов'
     puts '6. Назначение маршрута поезду'
     puts '7. Прицепить/отцепить вагоны к поезду'
-    puts '8. Переместить поезд на следующую/предидущую станцию'
+    puts '8. Переместить поезд на следующую/предыдущую станцию'
     puts '0. Завершить программу'
   end
 
@@ -215,6 +215,7 @@ class Main
     wagon = gets.chomp
     train.attach_wagon(wagon)
     puts "Вагон #{wagon} прицеплен"
+    puts "#{train.wagons}"
   end
 
   def detach_wagons_to_train
@@ -225,6 +226,8 @@ class Main
     wagon = gets.chomp
     train.detach_wagon(wagon)
     puts "Вагон #{wagon} отцеплен"
+    puts "#{train.wagons}"
+
   end
 
   def move_train
@@ -241,11 +244,13 @@ class Main
   def move_train_next_station
     train = train_selection
     train.move_next_station
+    puts "Поезд на станции: #{train.station.name}"
   end
 
   def move_train_previous_station
     train = train_selection
     train.move_previous_station
+    puts "Поезд на станции: #{train.station.name}"
   end
 end
 
