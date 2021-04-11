@@ -79,7 +79,7 @@ class Main
 
   def trains_list
     @trains.each_with_index do |train, i|
-      puts "#{i}. #{train.number}, тип: #{train.type}"
+      puts "#{i + 1}.  № #{train.number} - тип: #{train.type}"
     end
   end
 
