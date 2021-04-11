@@ -239,18 +239,17 @@ class Main
     elsif choice == 2
       move_train_previous_station
     end
+    puts "Поезд на станции: #{train.station.name}"
   end
 
   def move_train_next_station
     train = train_selection
     train.move_next_station
-    puts "Поезд на станции: #{train.station.name}"
   end
 
   def move_train_previous_station
     train = train_selection
     train.move_previous_station
-    puts "Поезд на станции: #{train.station.name}"
   end
 end
 
