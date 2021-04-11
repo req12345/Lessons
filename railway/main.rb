@@ -232,7 +232,7 @@ class Main
 
   def move_train
     puts '1. Переместить поезд на следующую станцию'
-    puts '2. Переместить поезд на предидущую станцию'
+    puts '2. Переместить поезд на предыдущую станцию'
     choice = gets.chomp.to_i
     if choice == 1
       move_train_next_station
