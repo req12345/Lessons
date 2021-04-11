@@ -220,14 +220,19 @@ class Main
 
   def detach_wagons_to_train
     train = train_selection
-
-    puts 'Введите название отцепляемого вагона'
-    puts "#{train.wagons}"
-    wagon = gets.chomp
-    train.detach_wagon(wagon)
-    puts "Вагон #{wagon} отцеплен"
-    puts "#{train.wagons}"
-
+    if train.wagons.size == 0
+      puts 'В составе нет вагонов, сначала прицепите вагон!'
+      return
+      
+    else
+      puts "#{train.wagons}"
+      puts 'Введите название отцепляемого вагона'
+      puts "#{train.wagons}"
+      wagon = gets.chomp
+      train.detach_wagon(wagon)
+      puts "Вагон #{wagon} отцеплен"
+      puts "#{train.wagons}"
+    end
   end
 
   def move_train
