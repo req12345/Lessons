@@ -22,16 +22,13 @@ class Main
 
       case action
       when 1 then create_new_station
-      when 2 then stations_list(@stations)
+      when 2 then list_stations_trains
       when 3 then create_new_train
       when 4 then create_new_route
       when 5 then edit_route
       when 6 then train_route_take
-      when 7 then attach_wagons_to_train
-      when 8 then detach_wagons_to_train
-      when 9 then move_train_next_station
-      when 10 then move_train_previous_station
-      when 11 then trains_list
+      when 7 then wagons_operation
+      when 8 then move_train
       when 0 then break
       end
     end
@@ -43,16 +40,13 @@ class Main
 # Пользователю программы доступ к этим методам не нужен, они вызываются только из Меню
   def print_menu
     puts '1. Новая станция'
-    puts '2. Список станций'
+    puts '2. Список станций и поездов'
     puts '3. Новый поезд'
     puts '4. Новый маршрут'
     puts '5. Редактирование маршрутов'
     puts '6. Назначение маршрута поезду'
-    puts '7. Добавить вагоны к поезду'
-    puts '8. Отцепить вагоны от поезда'
-    puts '9. Переместить поезд на следующую станцию'
-    puts '10. Переместить поезд на следующую станцию'
-    puts '11. Список поездов'
+    puts '7. Прицепить/отцепить вагоны к поезду'
+    puts '8. Переместить поезд на следующую/предидущую станцию'
     puts '0. Завершить программу'
   end
 
@@ -64,15 +58,28 @@ class Main
     puts "Вы создали станцию #{station.name}"
   end
 
+  def list_stations_trains
+
+    puts '1. Посмотреть список станций'
+    puts '2. Посмотреть список поездов'
+    choice = gets.chomp.to_i
+
+    if choice == 1
+      stations_list(@stations)
+    elsif choice == 2
+      trains_list
+    end
+  end
+
   def stations_list(stations)
     stations.each_with_index do |station, i|
       puts "#{i}. #{station.name}"
     end
   end
 
-  def trains_list(stations)
+  def trains_list
     @trains.each_with_index do |train, i|
-      puts "#{i}. #{train.number}"
+      puts "#{i}. #{train.number}, тип: #{train.type}"
     end
   end
 
@@ -191,6 +198,17 @@ class Main
     end
   end
 
+  def wagons_operation
+    puts '1. Добавить вагоны к поезду'
+    puts '2. Отцепить вагоны от поезда'
+    choice = gets.chomp.to_i
+    if choice == 1
+      attach_wagons_to_train
+    elsif choice == 2
+      detach_wagons_to_train
+    end
+  end
+
   def attach_wagons_to_train
     train = train_selection
     puts 'Введите название прицепляемого вагона'
@@ -207,6 +225,17 @@ class Main
     wagon = gets.chomp
     train.detach_wagon(wagon)
     puts "Вагон #{wagon} отцеплен"
+  end
+
+  def move_train
+    puts '1. Переместить поезд на следующую станцию'
+    puts '2. Переместить поезд на предидущую станцию'
+    choice = gets.chomp.to_i
+    if choice == 1
+      move_train_next_station
+    elsif choice == 2
+      move_train_previous_station
+    end
   end
 
   def move_train_next_station
