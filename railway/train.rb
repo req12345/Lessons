@@ -64,6 +64,7 @@ include InstanceCounter
     station = route.initial
     station.get_train(self)
     @station = station
+    register_instance
   end
 
   private

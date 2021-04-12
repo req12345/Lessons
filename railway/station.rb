@@ -8,6 +8,7 @@ include InstanceCounter
     @name = name
     @trains = []
     @@instances +=1
+    register_instance
   end
 
   def self.all
