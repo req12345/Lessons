@@ -1,4 +1,6 @@
 class Route
+  
+include InstanceCounter
 
   attr_reader :intermediate_station, :final, :initial, :stations
 
@@ -6,6 +8,7 @@ class Route
     @initial = initial
     @final = final
     @intermediate_station = []
+    @@instances +=1
   end
 
   def add_station(station)

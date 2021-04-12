@@ -1,3 +1,5 @@
+require_relative 'manufacturer.rb'
+require_relative 'instancecounter.rb'
 require_relative 'station.rb'
 require_relative 'train.rb'
 require_relative 'train_cargo.rb'
@@ -7,11 +9,15 @@ require_relative 'wagon.rb'
 require_relative 'wagon_cargo.rb'
 require_relative 'wagon_passenger.rb'
 
+
 class Main
   def initialize
+    @@stations = []
+    @@trains = []
     @stations = []
-    @routes = []
     @trains = []
+    @routes = []
+
   end
 
   def call
@@ -36,8 +42,6 @@ class Main
 
   private
 
-# Все нижеперечисленные методы помещены в приватную секцию, так как используются только внутри класса
-# Пользователю программы доступ к этим методам не нужен, они вызываются только из Меню
   def print_menu
     puts '1. Новая станция'
     puts '2. Список станций и поездов'
@@ -55,6 +59,7 @@ class Main
     name = gets.chomp
     station = Station.new(name)
     @stations << station
+    @@stations << station
     puts "Вы создали станцию #{station.name}"
   end
 
@@ -113,6 +118,8 @@ class Main
       elsif type == 2
         TrainCargo.new(number)
       end
+
+    @@trains << train
 
     if train.nil?
       puts 'Неверное число, вернитесь в начало'
@@ -174,14 +181,14 @@ class Main
       return
 
     else
-    puts 'Какую станцию вы хотите удалить?'
-    stations_list(route.stations)
-    i = gets.chomp.to_i
-    station_selected = route.stations[i]
+      puts 'Какую станцию вы хотите удалить?'
+      stations_list(route.stations)
+      i = gets.chomp.to_i
+      station_selected = route.stations[i]
 
-    route.delete_station(station_selected)
-    puts 'Станция удалена, новый список:'
-    stations_list(route.stations)
+      route.delete_station(station_selected)
+      puts 'Станция удалена, новый маршрут:'
+      stations_list(route.stations)
     end
   end
 
@@ -223,7 +230,7 @@ class Main
     if train.wagons.size == 0
       puts 'В составе нет вагонов, сначала прицепите вагон!'
       return
-      
+
     else
       puts "#{train.wagons}"
       puts 'Введите название отцепляемого вагона'
