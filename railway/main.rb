@@ -12,8 +12,6 @@ require_relative 'wagon_passenger.rb'
 
 class Main
   def initialize
-    @@stations = []
-    @@trains = []
     @stations = []
     @trains = []
     @routes = []
@@ -59,7 +57,6 @@ class Main
     name = gets.chomp
     station = Station.new(name)
     @stations << station
-    @@stations << station
     puts "Вы создали станцию #{station.name}"
   end
 

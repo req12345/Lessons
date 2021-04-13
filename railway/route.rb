@@ -8,7 +8,6 @@ include InstanceCounter
     @initial = initial
     @final = final
     @intermediate_station = []
-    @@instances +=1
     register_instance
   end
 

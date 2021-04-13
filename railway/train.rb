@@ -3,6 +3,8 @@ class Train
 include Manufacturer
 include InstanceCounter
 
+  @@trains = []
+
   attr_accessor :speed, :number
   attr_reader :wagons, :route, :station, :type, :wagon
 
@@ -12,19 +14,12 @@ include InstanceCounter
     @speed = 0
     @route = nil
     @station = nil
-    @@instances +=1
+    @@trains << self
+    register_instance
   end
-  # В классе Train создать метод класса find, который принимает номер поезда (указанный при его создании)
-  # и возвращает объект поезда по номеру или nil, если поезд с таким номером не найден.
 
   def self.find(number)
-    if @@trains.include?(train.number)
-      train = train.number
-    else
-      puts 'nil'
-    end
-  end
-
+    @@trains.select{|t| t.number == number}.first
   end
 
   def stop

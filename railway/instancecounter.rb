@@ -1,37 +1,25 @@
 module InstanceCounter
 
-  def self.included(base)
-    base.extend ClassMethods
-    base.send :include, InstanceMethods
-
-  end
-  module ClassMethods
-    @@instances = 0
-
-    def instances
-      @@instances
+  class << self
+    def included(base)
+      base.extend ClassMethods
     end
   end
 
-private
-
-  module InstanceMethods
-    @instances = 0
+  private
 
   def register_instance
-    @instances += 1
+    self.class.increase_instance_counter
   end
 
-  attr_accessor :register_instance
+  module ClassMethods
+
+    def instances_counter
+      @counter || 0
+    end
+
+    def increase_instance_counter
+      @counter = instances_counter + 1
+    end
+  end
 end
-# Создать модуль InstanceCounter, содержащий следующие методы класса и инстанс-методы, которые подключаются автоматически
-# при вызове include в классе:
-# Методы класса:
-#        - instances, который возвращает кол-во экземпляров данного класса
-# Инстанс-методы:
-
-#        - register_instance, который увеличивает счетчик кол-ва экземпляров класса и который можно вызвать из конструктора.
-#        При этом данный метод не должен быть публичным.
-
-# Подключить этот модуль в классы поезда, маршрута и станции.
-# Примечание: инстансы подклассов могут считаться по отдельности, не увеличивая счетчик инстансев базового класса.
