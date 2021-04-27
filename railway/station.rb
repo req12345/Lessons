@@ -13,7 +13,7 @@ include InstanceCounter
     register_instance
     validate!
   end
-
+  
   def valid?
     validate!
     true
@@ -21,7 +21,7 @@ include InstanceCounter
     false
   end
 
-    def self.all
+  def self.all
     @@stations
   end
 
