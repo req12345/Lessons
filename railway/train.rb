@@ -3,6 +3,8 @@ class Train
 include Manufacturer
 include InstanceCounter
 
+NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
+
   @@trains = []
 
   attr_accessor :speed, :number
@@ -17,7 +19,7 @@ include InstanceCounter
     @@trains << self
     register_instance
   end
-  
+
   def valid?
     validate!
     true
@@ -74,7 +76,7 @@ include InstanceCounter
 #move_next_station и move_previous_station. Используются только внутри класса Train
   def validate!
     raise "Number can't be nil" if number.nil?
-    #raise "Number should be at least 6 symbols" if number.length < 6
+    raise "Number has invalid format" if number != NUMBER_FORMAT
   end
 
   def next_station
