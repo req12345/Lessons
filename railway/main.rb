@@ -15,7 +15,6 @@ class Main
     @stations = []
     @trains = []
     @routes = []
-
   end
 
   def call

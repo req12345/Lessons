@@ -11,9 +11,17 @@ include InstanceCounter
     @trains = []
     @@stations << self
     register_instance
+    validate!
   end
 
-  def self.all
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
+
+    def self.all
     @@stations
   end
 
@@ -35,5 +43,12 @@ include InstanceCounter
 
     puts "Грузовые поезда: #{trains_list[:cargo].map(&:number).join(', ')}"
     puts "Всего:  #{trains_list[:cargo].size}"
+  end
+
+  private
+
+  def validate!
+    raise "Name can't be nil" if name.nil?
+    raise 'Name should be at least 2 symbols' if name.length < 2
   end
 end

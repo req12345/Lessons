@@ -9,6 +9,14 @@ include InstanceCounter
     @final = final
     @intermediate_station = []
     register_instance
+    validate!
+  end
+
+  def valid?
+    validate!
+    true
+  rescue
+    false
   end
 
   def add_station(station)
@@ -21,5 +29,12 @@ include InstanceCounter
 
   def stations
     stations = [@initial, *@intermediate_station, @final]
+  end
+
+  private
+
+  def validate!
+    raise "Route should have initial station" if initial.nil?
+    raise "Route should have final station" if final.nil?
   end
 end

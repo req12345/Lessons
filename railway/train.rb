@@ -17,6 +17,13 @@ include InstanceCounter
     @@trains << self
     register_instance
   end
+  
+  def valid?
+    validate!
+    true
+  rescue
+    false
+  end
 
   def self.find(number)
     @@trains.select{|t| t.number == number}.first
@@ -65,6 +72,11 @@ include InstanceCounter
   private
 #Данные методы помещены в private т.к. они созданы для удобства и простоты выполнения
 #move_next_station и move_previous_station. Используются только внутри класса Train
+  def validate!
+    raise "Number can't be nil" if number.nil?
+    #raise "Number should be at least 6 symbols" if number.length < 6
+  end
+
   def next_station
     current_station_index = route.stations.index(station)
     if current_station_index == (route.stations.length - 1)
