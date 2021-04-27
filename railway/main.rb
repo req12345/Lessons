@@ -116,7 +116,7 @@ class Main
         TrainCargo.new(number)
       end
 
-    @@trains << train
+    @trains << train
 
     if train.nil?
       puts 'Неверное число, вернитесь в начало'

@@ -18,6 +18,7 @@ NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
     @station = nil
     @@trains << self
     register_instance
+    validate!
   end
 
   def valid?
