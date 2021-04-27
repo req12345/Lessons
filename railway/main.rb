@@ -99,28 +99,26 @@ class Main
   end
 
   def create_new_train
-    puts 'Введите номер поезда
-(три буквы или цифры, необязательный дефис и еще 2 буквы или цифры)'
-    number = gets.chomp
-
-    puts 'Выберите тип поезда:
-    1. пассажирский
-    2. грузовой'
-
-    type = gets.chomp.to_i
-
     train =
-      if type == 1
-        TrainPassanger.new(number)
-      elsif type == 2
-        TrainCargo.new(number)
-      end
+      begin
+        puts "Введите номер поезда\n(три буквы или цифры, необязательный дефис и еще 2 буквы или цифры)"
+        number = gets.chomp
 
-    @trains << train
+        puts "Выберите тип поезда:\n1. пассажирский\n2. грузовой"
+        type = gets.chomp.to_i
+
+        case type
+        when 1 then TrainPassanger.new(number)
+        when 2 then TrainCargo.new(number)
+        else nil
+        end
+      rescue => e
+        puts e
+        retry
+      end
 
     if train.nil?
       puts 'Неверное число, вернитесь в начало'
-      return
     else
       @trains << train
       puts "Вы создали поезд #{train.number} с типом #{train.type}"

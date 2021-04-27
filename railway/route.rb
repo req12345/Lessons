@@ -8,8 +8,8 @@ include InstanceCounter
     @initial = initial
     @final = final
     @intermediate_station = []
-    register_instance
     validate!
+    register_instance
   end
 
   def valid?

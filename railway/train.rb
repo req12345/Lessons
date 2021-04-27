@@ -17,8 +17,8 @@ NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
     @route = nil
     @station = nil
     @@trains << self
-    register_instance
     validate!
+    register_instance
   end
 
   def valid?
@@ -73,8 +73,7 @@ NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
   end
 
   private
-#Данные методы помещены в private т.к. они созданы для удобства и простоты выполнения
-#move_next_station и move_previous_station. Используются только внутри класса Train
+
   def validate!
     raise "Number can't be nil" if number.nil?
     raise "Number has invalid format" if number !~ NUMBER_FORMAT
