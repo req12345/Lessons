@@ -76,7 +76,7 @@ NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
 #move_next_station и move_previous_station. Используются только внутри класса Train
   def validate!
     raise "Number can't be nil" if number.nil?
-    raise "Number has invalid format" if number != NUMBER_FORMAT
+    raise "Number has invalid format" if number !~ NUMBER_FORMAT
   end
 
   def next_station
