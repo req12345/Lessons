@@ -32,6 +32,8 @@ class Main
       when 6 then train_route_take
       when 7 then wagons_operation
       when 8 then move_train
+      when 9 then show_trains_on_station
+      when 10 then show_trains_wagons
       when 0 then break
       end
     end
@@ -48,6 +50,8 @@ class Main
     puts '6. Назначение маршрута поезду'
     puts '7. Прицепить/отцепить вагоны к поезду'
     puts '8. Переместить поезд на следующую/предыдущую станцию'
+    puts '9. Список поездов на станции'
+    puts '10. Список вагонов у поезда'
     puts '0. Завершить программу'
   end
 
@@ -89,6 +93,13 @@ class Main
     @trains.each_with_index {|train, i| puts "#{i}. #{train.number}"}
     i = gets.chomp.to_i
     train_selected = @trains[i]
+  end
+
+  def station_selection
+    puts 'Выберите станцию'
+    stations_list(@stations)
+    i = gets.chomp.to_i
+    station_selected = @stations[i]
   end
 
   def route_selection
@@ -160,11 +171,7 @@ class Main
   end
 
     def add_station_to_route(route)
-    puts 'Выберите добавляемую станцию'
-    stations_list(@stations)
-    i = gets.chomp.to_i
-    station_selected = @stations[i]
-
+    station_selected = station_selection
     route.add_station(station_selected)
     puts "Станция добавлена, новый маршрут:"
     stations_list(route.stations)
@@ -213,8 +220,11 @@ class Main
 
   def attach_wagons_to_train
     train = train_selection
-    puts 'Введите название прицепляемого вагона'
+    puts 'Введите № прицепляемого вагона'
     wagon = gets.chomp
+    puts 'Введите количество мест' if wagon.type == 'passanger'
+    total_sits = gets.chomp.to_i
+    puts 'Введите объем' if wagon.type == 'cargo'
     train.attach_wagon(wagon)
     puts "Вагон #{wagon} прицеплен"
     puts "#{train.wagons}"
@@ -258,6 +268,18 @@ class Main
     train = train_selection
     train.move_previous_station
     puts "Поезд на станции: #{train.station.name}"
+  end
+
+  def show_trains_on_station
+    station = station_selection
+    puts "На станции следующие поезда:"
+    station.trains_on_station
+  end
+# омер вагона (можно назначать автоматически), тип вагона, кол-во свободных и занятых мест
+# (для пассажирского вагона) или кол-во свободного и занятого объема (для грузовых вагонов).
+  def show_trains_wagons
+    train = train_selection
+    train.trains_wagons
   end
 end
 

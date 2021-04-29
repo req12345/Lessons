@@ -1,3 +1,6 @@
+# аписать метод, который принимает блок и проходит по всем поездам
+# на станции, передавая каждый поезд в блок.
+
 class Station
 
 include InstanceCounter
@@ -12,6 +15,11 @@ include InstanceCounter
     @@stations << self
     validate!
     register_instance
+  end
+
+
+  def trains_on_station
+    @trains.each_with_index {|train, i| puts "#{i}. №#{train.number}, тип:#{train.type}, вагоны:#{train.wagons}"}
   end
 
   def valid?

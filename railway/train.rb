@@ -1,3 +1,4 @@
+
 class Train
 
 include Manufacturer
@@ -19,6 +20,18 @@ NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
     @@trains << self
     validate!
     register_instance
+  end
+  # написать метод, который принимает блок и проходит по всем вагонам поезда
+  # (вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
+
+  def trains_wagons
+    @wagons.each do |wagon|
+      if wagon.type == 'passanger'
+        puts "#{wagon}. свободно мест: #{wagon.vacanted_sits}, занято #{wagon.occupied_sits}"
+      elsif wagon.type == 'cargo'
+        puts "#{wagon}. свободный объем: #{wagon.remaining_volume}, занято #{wagon.occupied_volume}"
+      end
+    end
   end
 
   def valid?
