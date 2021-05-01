@@ -19,7 +19,7 @@ include InstanceCounter
 
 
   def trains_on_station
-    @trains.each_with_index {|train, i| puts "#{i}. №#{train.number}, тип:#{train.type}, вагоны:#{train.wagons}"}
+    @trains.each {|train| yield train}
   end
 
   def valid?

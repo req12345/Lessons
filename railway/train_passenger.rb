@@ -1,7 +1,7 @@
-class TrainPassanger < Train
+class TrainPassenger < Train
 
   def initialize(number, *wagons)
-    @type = 'passanger'
+    @type = 'passenger'
     super
   end
 end

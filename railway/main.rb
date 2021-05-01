@@ -2,13 +2,12 @@ require_relative 'manufacturer.rb'
 require_relative 'instancecounter.rb'
 require_relative 'station.rb'
 require_relative 'train.rb'
+require_relative 'wagon.rb'
 require_relative 'train_cargo.rb'
 require_relative 'train_passenger.rb'
 require_relative 'route.rb'
-require_relative 'wagon.rb'
 require_relative 'wagon_cargo.rb'
 require_relative 'wagon_passenger.rb'
-
 
 class Main
   def initialize
@@ -34,6 +33,7 @@ class Main
       when 8 then move_train
       when 9 then show_trains_on_station
       when 10 then show_trains_wagons
+      when 11 then take_place
       when 0 then break
       end
     end
@@ -52,6 +52,7 @@ class Main
     puts '8. Переместить поезд на следующую/предыдущую станцию'
     puts '9. Список поездов на станции'
     puts '10. Список вагонов у поезда'
+    puts '11. Занять места или объем в вагоне'
     puts '0. Завершить программу'
   end
 
@@ -109,6 +110,13 @@ class Main
     route_selected = @routes[index_route]
   end
 
+  def wagon_selection(train)
+    puts 'Выберите вагон'
+    train.wagons.each_with_index {|wagon, i| puts "#{i}. #{wagon.number}"}
+    i = gets.chomp.to_i
+    wagon_selected = train.wagons[i]
+  end
+
   def create_new_train
     train =
       begin
@@ -119,7 +127,7 @@ class Main
         type = gets.chomp.to_i
 
         case type
-        when 1 then TrainPassanger.new(number)
+        when 1 then TrainPassenger.new(number)
         when 2 then TrainCargo.new(number)
         else nil
         end
@@ -221,25 +229,27 @@ class Main
   def attach_wagons_to_train
     train = train_selection
     puts 'Введите № прицепляемого вагона'
-    wagon = gets.chomp
-    puts 'Введите количество мест' if wagon.type == 'passanger'
-    total_sits = gets.chomp.to_i
-    puts 'Введите объем' if wagon.type == 'cargo'
+    number = gets.chomp
+    if train.type == 'passenger'
+      puts 'Введите количество мест'
+      total_sits = gets.chomp.to_i
+      wagon = WagonPassanger.new(number, total_sits)
+    elsif train.type == 'cargo'
+      puts 'Введите объем вагона'
+      total_volume = gets.chomp.to_i
+      wagon = WagonCargo.new(number, total_volume)
+    end
     train.attach_wagon(wagon)
-    puts "Вагон #{wagon} прицеплен"
-    puts "#{train.wagons}"
+    puts "Вагон #{wagon.number} прицеплен"
   end
 
   def detach_wagons_to_train
     train = train_selection
     if train.wagons.size == 0
       puts 'В составе нет вагонов, сначала прицепите вагон!'
-      return
-
     else
       puts "#{train.wagons}"
       puts 'Введите название отцепляемого вагона'
-      puts "#{train.wagons}"
       wagon = gets.chomp
       train.detach_wagon(wagon)
       puts "Вагон #{wagon} отцеплен"
@@ -272,14 +282,36 @@ class Main
 
   def show_trains_on_station
     station = station_selection
-    puts "На станции следующие поезда:"
-    station.trains_on_station
+    puts 'На станции следующие поезда'
+    station.trains_on_station do |train|
+    puts "Номер: #{train.number}, тип: #{train.type}, вагонов: #{train.wagons.size}"
+    end
   end
-# омер вагона (можно назначать автоматически), тип вагона, кол-во свободных и занятых мест
-# (для пассажирского вагона) или кол-во свободного и занятого объема (для грузовых вагонов).
+
   def show_trains_wagons
     train = train_selection
-    train.trains_wagons
+    puts 'В составе поезда следующие вагоны:'
+    train.trains_wagons do |wagon|
+      if wagon.type == 'passanger'
+        puts "№ #{wagon.number}, тип #{wagon.type} \nсвободно мест: #{wagon.vacanted_sits}, занято #{wagon.occupied_sits}"
+      elsif wagon.type == 'cargo'
+        puts "№ #{wagon.number}, тип #{wagon.type} \nсвободный объем: #{wagon.remaining_volume}, занято #{wagon.occupied_volume}"
+      end
+    end
+  end
+
+  def take_place
+    train = train_selection
+    wagon = wagon_selection(train)
+    if train.class == TrainPassenger
+      puts 'Сколько мест занять?'
+      places = gets.chomp.to_i
+      places.times {wagon.take_sit}
+    elsif train.class == TrainCargo
+      puts 'Какой объем занять?'
+      volume = gets.chomp.to_i
+      wagon.occupy_volume(volume)
+    end
   end
 end
 
