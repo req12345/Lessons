@@ -1,36 +1,33 @@
-# аписать метод, который принимает блок и проходит по всем поездам
-# на станции, передавая каждый поезд в блок.
+# frozen_string_literal: true
 
 class Station
+  include InstanceCounter
 
-include InstanceCounter
-
-  @@stations = []
+  @stations = []
 
   attr_reader :trains, :name
 
   def initialize(name)
     @name = name
     @trains = []
-    @@stations << self
+    @stations << self
     validate!
     register_instance
   end
 
-
-  def trains_on_station
-    @trains.each {|train| yield train}
+  def trains_on_station(&block)
+    @trains.each(&block)
   end
 
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 
   def self.all
-    @@stations
+    @stations
   end
 
   def get_train(train)
@@ -41,17 +38,20 @@ include InstanceCounter
     @trains.delete(train)
   end
 
-  def trains_by_type
-    trains_list = { 'cargo': [], 'passanger': [] }
-    trains.each do |train|
-      trains_list[train.type.to_sym] << train
-    end
-    puts "Пассажирские поезда: #{trains_list[:passanger].map(&:number).join(', ')}"
-    puts "Всего:  #{trains_list[:passanger].size}"
+  # rubocop:disable Metrics/AbcSize
 
-    puts "Грузовые поезда: #{trains_list[:cargo].map(&:number).join(', ')}"
-    puts "Всего:  #{trains_list[:cargo].size}"
+  def trains_by_type
+    list = { 'cargo': [], 'passanger': [] }
+    trains.each do |train|
+      list[train.type.to_sym] << train
+      puts "Пассажирские поезда: #{list[:passanger].map(&:number).join(', ')}"
+      puts "Всего:  #{list[:passanger].size}"
+      puts "Грузовые поезда: #{list[:cargo].map(&:number).join(', ')}"
+      puts "Всего:  #{list[:cargo].size}"
+    end
   end
+
+  # rubocop:anable Metrics/AbcSize
 
   private
 

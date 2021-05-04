@@ -1,10 +1,12 @@
+# frozen_string_literal: true
 
 class Train
+  include Manufacturer
+  include InstanceCounter
 
-include Manufacturer
-include InstanceCounter
+  NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i.freeze
 
-NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
+  # rubocop:disable Style/ClassVars
 
   @@trains = []
 
@@ -21,22 +23,20 @@ NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
     validate!
     register_instance
   end
-  # написать метод, который принимает блок и проходит по всем вагонам поезда
-  # (вагоны должны быть во внутреннем массиве), передавая каждый объект вагона в блок.
 
-  def trains_wagons
-    @wagons.each {|wagon| yield wagon}
+  def trains_wagons(&block)
+    @wagons.each(&block)
   end
 
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 
   def self.find(number)
-    @@trains.select{|t| t.number == number}.first
+    @@trains.select { |t| t.number == number }.first
   end
 
   def stop
@@ -45,15 +45,13 @@ NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
 
   def attach_wagon(wagon)
     return if speed != 0 && wagon.type != type
+
     @wagons << wagon
   end
 
   def detach_wagon(wagon)
-    if @wagons.size != 0
-      @wagons.delete(wagon)
-    end
+    @wagons.delete(wagon) unless @wagons.empty?
   end
-
 
   def move_previous_station
     return unless previous_station
@@ -83,21 +81,20 @@ NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i
 
   def validate!
     raise "Number can't be nil" if number.nil?
-    raise "Number has invalid format" if number !~ NUMBER_FORMAT
+    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
   end
 
   def next_station
     current_station_index = route.stations.index(station)
-    if current_station_index == (route.stations.length - 1)
-      return
-    end
+    return if current_station_index == (route.stations.length - 1)
+
     next_station_index = (current_station_index + 1)
     route.stations[next_station_index]
   end
 
   def previous_station
     current_station_index = route.stations.index(station)
-    return if current_station_index == 0
+    return if current_station_index.zero?
 
     previous_station_index = (current_station_index - 1)
     route.stations[previous_station_index]

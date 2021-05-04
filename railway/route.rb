@@ -1,8 +1,9 @@
+# frozen_string_literal: true
+
 class Route
+  include InstanceCounter
 
-include InstanceCounter
-
-  attr_reader :intermediate_station, :final, :initial, :stations
+  attr_reader :intermediate_station, :final, :initial
 
   def initialize(initial, final)
     @initial = initial
@@ -15,7 +16,7 @@ include InstanceCounter
   def valid?
     validate!
     true
-  rescue
+  rescue StandardError
     false
   end
 
@@ -27,14 +28,18 @@ include InstanceCounter
     @intermediate_station.delete(name)
   end
 
+  # rubocop:disable all
+
   def stations
     stations = [@initial, *@intermediate_station, @final]
   end
 
+  # rubocop:anable all
+
   private
 
   def validate!
-    raise "Route should have initial station" if initial.nil?
-    raise "Route should have final station" if final.nil?
+    raise 'Route should have initial station' if initial.nil?
+    raise 'Route should have final station' if final.nil?
   end
 end

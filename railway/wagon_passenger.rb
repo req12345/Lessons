@@ -1,9 +1,9 @@
-class WagonPassanger < Wagon
+# frozen_string_literal: true
 
-attr_reader :occupied_sits, :free_sits
+class WagonPassanger < Wagon
+  attr_reader :occupied_sits, :free_sits
 
   def initialize(number, total_sits)
-
     @type = 'passanger'
     @total_sits = total_sits
     @occupied_sits = 0
@@ -15,7 +15,6 @@ attr_reader :occupied_sits, :free_sits
   end
 
   def vacanted_sits
-    vacanted_sits = @total_sits - @occupied_sits
-    vacanted_sits
+    @total_sits - @occupied_sits
   end
 end
