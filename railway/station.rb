@@ -38,8 +38,6 @@ class Station
     @trains.delete(train)
   end
 
-  # rubocop:disable Metrics/AbcSize
-
   def trains_by_type
     list = { 'cargo': [], 'passanger': [] }
     trains.each do |train|
@@ -50,8 +48,6 @@ class Station
       puts "Всего:  #{list[:cargo].size}"
     end
   end
-
-  # rubocop:anable Metrics/AbcSize
 
   private
 

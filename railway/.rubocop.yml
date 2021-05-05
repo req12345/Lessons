@@ -1,0 +1,16 @@
+AllCops:
+  Exclude:
+    - 'train.rb'
+
+Style/FrozenStringLiteralComment:
+  Enabled: false
+
+Style/Documentation:
+  Enabled: false
+
+Metrics/LineLength:
+  Max: 120
+
+Metrics/AbcSize:
+  IgnoredMethods:
+    - 'trains_by_type'

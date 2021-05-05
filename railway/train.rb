@@ -6,8 +6,6 @@ class Train
 
   NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i.freeze
 
-  # rubocop:disable Style/ClassVars
-
   @@trains = []
 
   attr_accessor :speed, :number
