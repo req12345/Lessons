@@ -6,12 +6,14 @@ class Train
   include Validation
   include Accessors
 
+  FORMAT_NUMBER = /\A[а-я \w \d]{3}-*[а-я \w \d]{2}\Z/i.freeze
+
   @@trains = []
 
   attr_accessor :speed, :number
   attr_reader :wagons, :route, :station, :type, :wagon
   validate :number, :presence
-  validate :number, :format, NUMBER_FORMAT
+  validate :number, :format, FORMAT_NUMBER
 
   def initialize(number, *wagons)
     @number = number
