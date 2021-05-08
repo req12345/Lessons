@@ -1,10 +1,10 @@
 module Accessors
+  
   def self.included(base)
-   base.extend(ClassMethods)
+    base.extend(ClassMethods)
   end
 
   module ClassMethods
-
     def attr_accessor_with_history(*attr)
       attr.each do |attr|
         var_name = "@#{attr}".to_sym
@@ -22,11 +22,10 @@ module Accessors
     end
 
     def strong_attr_accessor(attr_name, attr_class)
-
       define_method(attr_name) { instance_variable_get("@#{attr_name}".to_sym) }
 
       define_method("#{attr_name}=".to_sym) do |value|
-        raise TypeError, "Type should be #{attr_class}" unless value.is_a?(attr_class.class)
+        raise TypeError, "Type should be #{attr_class}" unless value.is_a?(attr_class)
 
         instance_variable_set("@#{attr_name}", value)
       end
@@ -38,5 +37,7 @@ class Test
   include Accessors
 
   attr_accessor_with_history :a, :b
-  strong_attr_accessor :c, :d
+
+  strong_attr_accessor :c, Integer
+  strong_attr_accessor :d, String
 end

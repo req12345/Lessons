@@ -3,13 +3,15 @@
 class Train
   include Manufacturer
   include InstanceCounter
-
-  NUMBER_FORMAT = /^[а-я a-z \d]{3}-*[а-я a-z \d]{2}$/i.freeze
+  include Validation
+  include Accessors
 
   @@trains = []
 
   attr_accessor :speed, :number
   attr_reader :wagons, :route, :station, :type, :wagon
+  validate :number, :presence
+  validate :number, :format, NUMBER_FORMAT
 
   def initialize(number, *wagons)
     @number = number
@@ -76,11 +78,6 @@ class Train
   end
 
   private
-
-  def validate!
-    raise "Number can't be nil" if number.nil?
-    raise 'Number has invalid format' if number !~ NUMBER_FORMAT
-  end
 
   def next_station
     current_station_index = route.stations.index(station)

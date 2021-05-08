@@ -2,6 +2,11 @@
 
 class Station
   include InstanceCounter
+  include Validation
+  include Accessors
+
+  validate :name, :presence
+  validate :name, :name_length
 
   @stations = []
 
@@ -47,12 +52,5 @@ class Station
       puts "Грузовые поезда: #{list[:cargo].map(&:number).join(', ')}"
       puts "Всего:  #{list[:cargo].size}"
     end
-  end
-
-  private
-
-  def validate!
-    raise "Name can't be nil" if name.nil?
-    raise 'Name should be at least 2 symbols' if name.length < 2
   end
 end

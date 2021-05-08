@@ -3,7 +3,9 @@
 
 require_relative 'manufacturer'
 require_relative 'instancecounter'
+require_relative 'validate'
 require_relative 'station'
+require_relative 'accessors'
 require_relative 'train'
 require_relative 'wagon'
 require_relative 'train_cargo'
