@@ -1,18 +1,20 @@
-class WagonPassenger < TrainPassenger
+# frozen_string_literal: true
 
-  def initialize(wagon)
-    wagon = 1
+class WagonPassanger < Wagon
+  attr_reader :occupied_sits, :free_sits
+
+  def initialize(number, total_sits)
+    @type = 'passanger'
+    @total_sits = total_sits
+    @occupied_sits = 0
+    super(number)
   end
 
-  def attach_wagon_passenger
-    return if @speed != 0
-    @wagons_passenger << wagon
-    wagon += 1
-    end
-
-  def detach_wagon_passenger
-    return unless @wagons_passenger.empty? == true || speed == 0
-    @wagons_passenger.delete_at(-1)
+  def take_sit
+    @occupied_sits += 1
   end
 
+  def vacanted_sits
+    @total_sits - @occupied_sits
+  end
 end

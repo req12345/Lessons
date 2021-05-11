@@ -1,9 +1,37 @@
+# frozen_string_literal: true
+
 class Station
+  include InstanceCounter
+  include Validation
+
+  validate :name, :presence
+  validate :name, :name_length
+
+  @stations = []
+
   attr_reader :trains, :name
 
   def initialize(name)
     @name = name
-    @trains_cargo = []
+    @trains = []
+    @stations << self
+    validate!
+    register_instance
+  end
+
+  def trains_on_station(&block)
+    @trains.each(&block)
+  end
+
+  def valid?
+    validate!
+    true
+  rescue StandardError
+    false
+  end
+
+  def self.all
+    @stations
   end
 
   def get_train(train)
@@ -15,14 +43,13 @@ class Station
   end
 
   def trains_by_type
-    trains_list = { 'cargo': [], 'passanger': [] }
+    list = { 'cargo': [], 'passanger': [] }
     trains.each do |train|
-      trains_list[train.type.to_sym] << train
+      list[train.type.to_sym] << train
+      puts "Пассажирские поезда: #{list[:passanger].map(&:number).join(', ')}"
+      puts "Всего:  #{list[:passanger].size}"
+      puts "Грузовые поезда: #{list[:cargo].map(&:number).join(', ')}"
+      puts "Всего:  #{list[:cargo].size}"
     end
-    puts "Пассажирские поезда: #{trains_list[:passanger].map(&:number).join(', ')}"
-    puts "Всего:  #{trains_list[:passanger].size}"
-
-    puts "Грузовые поезда: #{trains_list[:cargo].map(&:number).join(', ')}"
-    puts "Всего:  #{trains_list[:cargo].size}"
   end
 end

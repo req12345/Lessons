@@ -1,60 +1,73 @@
+# frozen_string_literal: true
+
 class Train
+  include Manufacturer
+  include InstanceCounter
+  include Validation
+  include Accessors
+
+  FORMAT_NUMBER = /\A[а-я \w \d]{3}-*[а-я \w \d]{2}\Z/i.freeze
+
+  @@trains = []
 
   attr_accessor :speed, :number
+  attr_reader :wagons, :route, :station, :type, :wagon
+  validate :number, :presence
+  validate :number, :format, FORMAT_NUMBER
 
-  attr_reader :wagons, :route, :station, :type
-
-  def initialize(number, type, wagons)
+  def initialize(number, *wagons)
     @number = number
-    @type = type
     @wagons = wagons
     @speed = 0
     @route = nil
     @station = nil
+    @@trains << self
+    validate!
+    register_instance
+  end
+
+  def trains_wagons(&block)
+    @wagons.each(&block)
+  end
+
+  def valid?
+    validate!
+    true
+  rescue StandardError
+    false
+  end
+
+  def self.find(number)
+    @@trains.select { |t| t.number == number }.first
   end
 
   def stop
     @speed = 0
   end
 
-  def hook_in
-    return if speed != 0
-    @wagons += 1
+  def attach_wagon(wagon)
+    return if speed != 0 && wagon.type != type
+
+    @wagons << wagon
   end
 
-  def hook_out
-    return unless @wagons > 1
-    @wagons -= 1
-  end
-
-  def next_station
-    current_station_index = route.stations.index(station)
-    if current_station_index == (route.stations.length - 1)
-      puts 'Вы на конечной станции'
-      return
-    end
-    next_station_index = (current_station_index + 1)
-    next_station = route.stations[next_station_index]
-  end
-
-  def previous_station
-    current_station_index = route.stations.index(station)
-    if current_station_index == 0
-      puts 'Вы на начальной станции'
-      return
-    end
-    previous_station_index = (current_station_index - 1)
-    previous_station = route.stations[previous_station_index]
-  end
-
-  def current_station
-    current_station = station
+  def detach_wagon(wagon)
+    @wagons.delete(wagon) unless @wagons.empty?
   end
 
   def move_previous_station
     return unless previous_station
+
     @station.send_train(self)
     @station = previous_station
+    @station.get_train(self)
+  end
+
+  def move_next_station
+    return unless next_station
+
+    @station.send_train(self)
+    @station = next_station
     @station.get_train(self)
   end
 
@@ -63,5 +76,28 @@ class Train
     station = route.initial
     station.get_train(self)
     @station = station
+    register_instance
+  end
+
+  private
+
+  def next_station
+    current_station_index = route.stations.index(station)
+    return if current_station_index == (route.stations.length - 1)
+
+    next_station_index = (current_station_index + 1)
+    route.stations[next_station_index]
+  end
+
+  def previous_station
+    current_station_index = route.stations.index(station)
+    return if current_station_index.zero?
+
+    previous_station_index = (current_station_index - 1)
+    route.stations[previous_station_index]
+  end
+
+  def current_station
+    station
   end
 end

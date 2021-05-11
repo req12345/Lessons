@@ -1,8 +1,8 @@
-class TrainCargo < Train
+# frozen_string_literal: true
 
-  def initialize(number,type)
-  @number = number
-  @type = 'cargo'
-  @wagons_cargo = []
+class TrainCargo < Train
+  def initialize(number, *wagons)
+    @type = 'cargo'
+    super
   end
 end
