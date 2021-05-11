@@ -1,17 +1,20 @@
-class WagonCargo < TrainCargo
+# frozen_string_literal: true
 
-  def initialize(wagon)
-    wagon = 1
+class WagonCargo < Wagon
+  attr_reader :total_volume, :occupied_volume
+
+  def initialize(number, total_volume)
+    @type = 'cargo'
+    @total_volume = total_volume
+    @occupied_volume = 0
+    super(number)
   end
 
-  def attach_wagon_cargo
-    return if @speed != 0
-    @wagons_cargo << wagon
-    wagon += 1
-    end
+  def occupy_volume(volume)
+    @occupied_volume = volume
+  end
 
-  def detach_wagon_cargo
-    return unless @wagons_cargo.empty? == true || speed == 0
-    @wagons_cargo.delete_at(-1)
+  def remaining_volume
+    @total_volume - @occupied_volume
   end
 end
